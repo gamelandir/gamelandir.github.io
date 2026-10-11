@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>گیم لند</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#f3f4f9;--cd:#fff;--tx:#191b26;--mu:#6b6f84;--ac:#6d28d9;--br:#e0e2ee;--fr:#16a34a;--bs:#dc2626;--rq:#d97706}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0d0e17;--cd:#171926;--tx:#eef0fb;--mu:#9a9eb8;--ac:#a78bfa;--br:#2a2d42}}
+:root[data-theme="dark"]{--bg:#0d0e17;--cd:#171926;--tx:#eef0fb;--mu:#9a9eb8;--ac:#a78bfa;--br:#2a2d42}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:Tahoma,"Vazirmatn",sans-serif;line-height:1.7}
+header{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);z-index:9}
+header b{font-size:19px;color:var(--ac)}header div{display:flex;gap:8px}
+.ib{border:1px solid var(--br);background:var(--cd);color:var(--tx);border-radius:10px;min-width:40px;height:40px;font:inherit;cursor:pointer;padding:0 10px}
+nav{display:flex;gap:6px;padding:0 16px 8px;overflow-x:auto;position:sticky;top:calc(env(safe-area-inset-top,0px) + 64px);background:var(--bg);z-index:8}
+nav button{flex:1;white-space:nowrap;padding:9px 12px;border:1px solid var(--br);background:var(--cd);color:var(--tx);border-radius:10px;font:inherit;cursor:pointer}
+nav button.on{background:var(--ac);color:#fff;border-color:var(--ac)}
+main{max-width:640px;margin:0 auto;padding:0 16px 50px}
+h2{font-size:17px;margin:20px 0 8px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.dev{border:2px solid var(--br);background:var(--cd);border-radius:14px;padding:10px;cursor:pointer;display:flex;flex-direction:column;gap:2px;font-size:14px}
+.dev small{color:var(--mu);font-size:12px}.dev span{font-size:12px;font-weight:bold}
+.dev.free{border-color:var(--fr)}.dev.free span{color:var(--fr)}.dev.busy{border-color:var(--bs);opacity:.75}.dev.busy span{color:var(--bs)}.dev.req{border-color:var(--rq)}.dev.req span{color:var(--rq)}
+.card{background:var(--cd);border:1px solid var(--br);border-radius:14px;padding:12px;margin:8px 0}
+.rules{max-width:608px;margin:0 16px 8px;border-color:var(--rq);font-size:14px}
+.rules b{color:var(--rq)}
+@media (min-width:672px){.rules{margin:0 auto 8px}}
+.big{font-size:30px;font-weight:bold;color:var(--ac);direction:ltr;text-align:center}
+.btn{display:block;width:100%;padding:12px;border:0;border-radius:12px;background:var(--ac);color:#fff;font:inherit;font-weight:bold;cursor:pointer;text-align:center}
+.btn.sm{display:inline-block;width:auto;padding:6px 12px;font-size:13px;margin:4px 2px 0}.btn.gr{background:var(--bg);color:var(--tx);border:1px solid var(--br)}.btn.rd{background:var(--bs)}
+label{display:block;font-size:13px;color:var(--mu);margin:8px 0 3px}
+input,select{width:100%;padding:10px;border:1px solid var(--br);border-radius:10px;background:var(--bg);color:var(--tx);font:inherit}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}.chips button{padding:7px 14px;border:1px solid var(--br);background:var(--cd);color:var(--tx);border-radius:20px;font:inherit;cursor:pointer}.chips button.on{background:var(--ac);color:#fff;border-color:var(--ac)}
+.row{display:flex;align-items:center;gap:10px}.row .gr1{flex:1}
+.av{width:44px;height:44px;border-radius:50%;object-fit:cover;background:var(--br);display:flex;align-items:center;justify-content:center;font-size:20px;flex:none}
+.st{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin:10px 0}.st i{aspect-ratio:1;border:2px dashed var(--br);border-radius:50%;display:flex;align-items:center;justify-content:center;font-style:normal}.st i.f{border:2px solid var(--ac);background:var(--ac);color:#fff}
+.mu{color:var(--mu);font-size:13px}.hide{display:none}.demo{background:#f59e0b33;padding:8px;border-radius:10px;font-size:12px;text-align:center;margin:0 16px 8px}
+.modal{position:fixed;inset:0;background:#000a;z-index:30;display:none;align-items:flex-end;justify-content:center}.modal.on{display:flex}
+.sheet{background:var(--bg);width:100%;max-width:640px;border-radius:18px 18px 0 0;padding:16px 16px calc(24px + env(safe-area-inset-bottom,0px))}
+#ts{position:fixed;bottom:calc(20px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);background:#000d;color:#fff;padding:10px 18px;border-radius:20px;font-size:14px;display:none;z-index:40;max-width:90%}#ts.on{display:block}
+</style>
+</head>
+<body>
+<header><b id="nm">🎮 گیم لند</b><div><button class="ib" id="th" aria-label="روز و شب">🌓</button><button class="ib" id="ac" onclick="accBtn()">👤</button></div></header>
+<div class="card rules">
+<b>📜 قوانین گیم لند</b><br>
+۱. در صورت افتادن دسته، ۴۰۰ هزار تومان از شما دریافت می‌شود.<br>
+۲. بعد از بازی، دستگاه را خاموش نکنید.<br>
+۳. لطفاً بلندبلند داد نزنید.
+</div>
+<div class="demo hide" id="demo">حالت نمایشی: هنوز به دیتابیس وصل نیست</div>
+<nav id="tabs"><button class="on" data-t="dev">دستگاه‌ها</button><button data-t="lead">برترین‌ها</button><button data-t="card">کارت من</button><button data-t="adm" id="tadm" class="hide">مدیر</button></nav>
+<main>
+<section id="t-dev"></section><section id="t-lead" class="hide"></section><section id="t-card" class="hide"></section><section id="t-adm" class="hide"></section>
+</main>
+<div class="modal" id="au"><div class="sheet">
+<h2 id="atit" style="margin-top:0">ورود</h2>
+<label id="ul">نام کاربری</label><input id="au_u" dir="ltr" autocapitalize="none" placeholder="مثلاً ali_gamer">
+<div id="phw" class="hide"><label>شمارهٔ موبایل</label><input id="au_ph" inputmode="numeric" placeholder="09123456789"></div>
+<label>رمز</label><input id="au_p" type="password" dir="ltr">
+<div class="mu" id="am" style="margin-top:8px"></div>
+<button class="btn" id="abtn" style="margin-top:10px" onclick="doAuth()">ورود</button>
+<button class="btn gr" id="sw" style="margin-top:8px" onclick="setMode(mode==='in'?'up':'in')">حساب نداری؟ ساخت حساب</button>
+<button class="btn gr" style="margin-top:8px" onclick="$('au').classList.remove('on')">بستن</button>
+</div></div>
+<div id="ts"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.58.0/dist/umd/supabase.min.js"></script>
+<script>
+var CFG={URL:"https://pftikahbfbbbdbacbklh.supabase.co",KEY:"sb_publishable_4byrs_uw_h2PrIRPdk-FwQ_PH0prZyz",NAME:"گیم لند"};
+var sb=null,demo=true,me=null,isA=false,S={rate_hall4:80000,rate_hall5:110000,rate_vip4:90000,rate_vip5:120000,stamps_needed:6,free_value:80000,home_stamps:12},D=[],MS=null,GM=[],cur="dev",lg={g:0,p:"day"},mode="in";
+function $(i){return document.getElementById(i)}
+function esc(s){var d=document.createElement("div");d.textContent=s==null?"":s;return d.innerHTML}
+function fa(n){return Number(n).toLocaleString("fa-IR")}
+function pad(n){return String(n).padStart(2,"0")}
+function toast(t){var e=$("ts");e.textContent=t;e.classList.add("on");setTimeout(function(){e.classList.remove("on")},2600)}
+function rate(d){return S["rate_"+d.zone+d.kind.slice(2)]}
+function money(m,r){return Math.round(m*r/60000)*1000}
+function setTh(t){document.documentElement.setAttribute("data-theme",t);try{localStorage.setItem("gn_th",t)}catch(e){}}
+try{var tt=localStorage.getItem("gn_th");if(tt)setTh(tt)}catch(e){}
+$("th").onclick=function(){var d=document.documentElement.getAttribute("data-theme");var dark=d?d==="dark":matchMedia("(prefers-color-scheme:dark)").matches;setTh(dark?"light":"dark")};
+$("nm").textContent="🎮 "+CFG.NAME;document.title=CFG.NAME;
+document.querySelectorAll("#tabs button").forEach(function(b){b.onclick=function(){go(b.dataset.t)}});
+function go(t){cur=t;document.querySelectorAll("#tabs button").forEach(function(b){b.classList.toggle("on",b.dataset.t===t)});["dev","lead","card","adm"].forEach(function(x){$("t-"+x).classList.toggle("hide",x!==t)});draw()}
+function demoDevices(){var a=[],i;["۱","۲","۳","۴","۵","۶","۶+","۷","۸"].forEach(function(n,k){a.push({id:k+1,name:"دستگاه "+n,kind:"PS4",zone:"hall",status:(k==1||k==4||k==6)?"busy":"free",busy_since:new Date(Date.now()-(k*17+12)*60000).toISOString()})});a.push({id:10,name:"پلی ۵ - سالن",kind:"PS5",zone:"hall",status:"free"});a.push({id:11,name:"پلی ۴ - VIP ۱",kind:"PS4",zone:"vip",status:"free"});a.push({id:12,name:"پلی ۴ - VIP ۲",kind:"PS4",zone:"vip",status:"req"});a.push({id:13,name:"پلی ۵ - VIP",kind:"PS5",zone:"vip",status:"free"});return a}
+
+async function init(){
+ try{if(CFG.URL&&window.supabase){sb=supabase.createClient(CFG.URL,CFG.KEY);var r=await sb.from("settings").select("*").eq("id",1).single();if(r.error)throw r.error;S=r.data;demo=false}}catch(e){demo=true}
+ if(demo){D=demoDevices();GM=[{id:1,name:"فیفا"},{id:2,name:"پس"},{id:3,name:"کالاف"}];lg.g=1;$("tadm").classList.remove("hide")}
+ else{var s=await sb.auth.getSession();if(s.data.session)await loadMe()}
+ $("demo").classList.toggle("hide",!demo);
+ await refresh();setInterval(function(){if(!document.hidden&&!demo)refresh()},10000);setInterval(tick,1000)}
+async function loadMe(){
+ var u=(await sb.auth.getUser()).data.user;if(!u){me=null;isA=false;return}
+ var r=await sb.from("profiles").select("*").eq("id",u.id).maybeSingle();var a=await sb.rpc("is_admin");isA=!!a.data;
+ me=r.data||(isA?{id:u.id,username:"مدیر",stamps:0,np:true}:null);$("tadm").classList.toggle("hide",!isA)}
+async function refresh(){
+ if(!demo){var d=await sb.from("devices").select("*").order("sort");D=d.data||[];var g=await sb.from("games").select("*").order("id");GM=g.data||[];var st=await sb.from("settings").select("*").eq("id",1).single();if(st.data)S=st.data;
+  MS=null;if(me&&!me.np){var m=await sb.from("sessions").select("*,devices(name,kind,zone)").eq("user_id",me.id).in("status",["requested","active"]).limit(1);MS=(m.data||[])[0]||null;var p=await sb.from("profiles").select("*").eq("id",me.id).maybeSingle();if(p.data)me=p.data}}
+ if(!lg.g&&GM.length)lg.g=GM[0].id;
+ $("ac").textContent=me?"👤 "+me.username:"👤";draw()}
+function draw(){if(cur==="dev")drawDev();else if(cur==="lead")drawLead();else if(cur==="card")drawCard();else drawAdm()}
+function accBtn(){if(me)go("card");else openAuth()}
+
+function drawDev(){
+ var h="";
+ if(MS){var dv=MS.devices||{};
+  if(MS.status==="requested")h+='<div class="card">⏳ درخواست شما برای <b>'+esc(dv.name)+'</b> ثبت شد. منتظر تأیید صاحب گیم‌نت باش.<br><button class="btn sm gr" onclick="cancelReq('+MS.id+')">لغو درخواست</button></div>';
+  else h+='<div class="card">🎮 در حال بازی روی <b>'+esc(dv.name)+'</b><div class="big" id="tm">00:00:00</div><div id="cs" class="mu" style="text-align:center"></div></div>'}
+ [["hall","سالن"],["vip","اتاق VIP"]].forEach(function(z){h+='<h2>'+z[1]+'</h2><div class="grid">';
+  D.filter(function(d){return d.zone===z[0]}).forEach(function(d){var s=d.status==="free"?"free":(d.status==="requested"||d.status==="req"?"req":"busy");
+   h+='<div class="dev '+s+'" onclick="pick('+d.id+')"><b>'+esc(d.name)+'</b><small>'+d.kind+' · '+fa(rate(d))+' تومان/ساعت</small><span>'+(s==="free"?"خالی":s==="req"?"درخواست شده":"در حال استفاده")+'</span>'+(s==="busy"&&d.busy_since?'<small class="bt" data-s="'+d.busy_since+'"></small>':'')+'</div>'});h+='</div>'});
+ $("t-dev").innerHTML=h;tick()}
+async function pick(id){
+ var d=D.find(function(x){return x.id===id});if(d.status!=="free")return toast("این دستگاه الان آزاد نیست");
+ if(demo)return toast("حالت نمایشی: ثبت درخواست فعال نیست");if(!me||me.np)return openAuth();if(MS)return toast("شما یک درخواست فعال دارید");
+ if(!confirm("درخواست «"+d.name+"» ثبت بشه؟"))return;
+ var r=await sb.rpc("request_device",{d:id});if(r.error)return toast("ثبت نشد. شاید دستگاه همین الان گرفته شد.");toast("✅ درخواست ثبت شد");refresh()}
+async function cancelReq(id){await sb.rpc("cancel_request",{s:id});refresh()}
+function tick(){
+ document.querySelectorAll(".bt").forEach(function(x){var m=Math.max(0,Math.floor((Date.now()-Date.parse(x.dataset.s))/60000));x.textContent="⏱ "+(m>=60?fa(Math.floor(m/60))+" ساعت و ":"")+fa(m%60)+" دقیقه است بازی می‌کنه"});
+ var e=$("tm");if(e&&MS&&MS.started_at){var s=Math.max(0,Math.floor((Date.now()-Date.parse(MS.started_at))/1000));e.textContent=pad(Math.floor(s/3600))+":"+pad(Math.floor(s%3600/60))+":"+pad(s%60);$("cs").textContent="مبلغ تقریبی: "+fa(money(Math.max(1,Math.ceil(s/60)),rate(MS.devices||{kind:"PS4",zone:"hall"})))+" تومان"}
+ document.querySelectorAll(".tmA").forEach(function(x){var s=Math.max(0,Math.floor((Date.now()-Date.parse(x.dataset.s))/1000));x.textContent=pad(Math.floor(s/3600))+":"+pad(Math.floor(s%3600/60))+":"+pad(s%60);x.nextElementSibling.textContent="≈ "+fa(money(Math.max(1,Math.ceil(s/60)),+x.dataset.r))+" تومان"})}
+
+async function drawLead(){
+ var h='<div class="chips">'+GM.map(function(g){return '<button class="'+(lg.g==g.id?"on":"")+'" onclick="lg.g='+g.id+';drawLead()">'+esc(g.name)+'</button>'}).join("")+'</div><div class="chips">'+[["day","امروز"],["week","این هفته"],["month","این ماه"]].map(function(p){return '<button class="'+(lg.p===p[0]?"on":"")+'" onclick="lg.p=\''+p[0]+'\';drawLead()">'+p[1]+'</button>'}).join("")+'</div>';
+ var arr=[];
+ if(demo)arr=[{n:"reza_pro",a:"",p:12},{n:"sina",a:"",p:9},{n:"amir_fifa",a:"",p:7}];
+ else if(lg.g){var since=new Date();if(lg.p==="day")since.setHours(0,0,0,0);else since=new Date(Date.now()-(lg.p==="week"?7:30)*864e5);
+  var r=await sb.from("scores").select("points,user_id,profiles(username,avatar_url)").eq("game_id",lg.g).gte("created_at",since.toISOString());var m={};
+  (r.data||[]).forEach(function(x){var k=x.user_id;m[k]=m[k]||{n:x.profiles?x.profiles.username:"؟",a:x.profiles?x.profiles.avatar_url:"",p:0};m[k].p+=x.points});
+  arr=Object.keys(m).map(function(k){return m[k]}).sort(function(a,b){return b.p-a.p}).slice(0,10)}
+ h+=arr.length?arr.map(function(x,i){return '<div class="card row"><b>'+(i<3?["🥇","🥈","🥉"][i]:fa(i+1))+'</b>'+av(x.a)+'<span class="gr1">'+esc(x.n)+'</span><b>'+fa(x.p)+' امتیاز</b></div>'}).join(""):'<p class="mu">هنوز امتیازی ثبت نشده.</p>';
+ $("t-lead").innerHTML=h}
+function av(u){return u?'<img class="av" src="'+esc(u)+'" alt="">':'<div class="av">🎮</div>'}
+
+function drawCard(){
+ var el=$("t-card");
+ if(!me)return el.innerHTML='<div class="card"><p>برای دیدن کارت و گرفتن دستگاه باید وارد بشی.</p><button class="btn" onclick="openAuth()">ورود / ساخت حساب</button></div>';
+ var n=S.stamps_needed,st=me.stamps||0,b="",i;for(i=0;i<n;i++)b+='<i class="'+(i<st?"f":"")+'">'+(i<st?"✓":"")+'</i>';
+ var h='<div class="card row">'+av(me.avatar_url)+'<div class="gr1"><b>'+esc(me.username)+'</b><div class="mu">'+esc(me.phone||"")+'</div></div></div>';
+ if(!me.np)h+='<label class="btn gr" style="margin:6px 0;cursor:pointer">📷 تغییر عکس پروفایل<input type="file" accept="image/*" class="hide" onchange="upAv(this)"></label>';
+ h+='<h2>کارت مهر</h2><div class="card"><div class="mu">هر ۱ ساعت بازی = ۱ مهر. با '+fa(n)+' مهر، ۱ ساعت رایگان (تا '+fa(S.free_value)+' تومان) داری.</div><div class="st" style="grid-template-columns:repeat('+Math.min(n,6)+',1fr)">'+b+'</div><b>مهرهای تو: '+fa(st)+'</b>';
+ if(st>=n)h+='<p>🎁 ساعت رایگان داری! موقع پایان بازی به صاحب گیم‌نت بگو.</p>';
+ if(st>=S.home_stamps)h+='<p>🏠 جایزهٔ ویژه: کنسول برای خونه (۱۲ ساعت)! به صاحب گیم‌نت بگو.</p>';else h+='<p class="mu">با '+fa(S.home_stamps)+' مهر، کنسول برای خونه می‌گیری.</p>';
+ h+='</div><button class="btn gr" style="margin-top:12px" onclick="logout()">خروج از حساب</button>';el.innerHTML=h}
+async function upAv(inp){var f=inp.files[0];if(!f)return;var p=me.id+"/avatar-"+Date.now()+".jpg";var u=await sb.storage.from("avatars").upload(p,f,{contentType:f.type});if(u.error)return toast("آپلود عکس نشد");
+ await sb.from("profiles").update({avatar_url:sb.storage.from("avatars").getPublicUrl(p).data.publicUrl}).eq("id",me.id);refresh()}
+async function logout(){if(sb)await sb.auth.signOut();me=null;isA=false;MS=null;$("tadm").classList.add("hide");go("dev");refresh()}
+
+function openAuth(){$("am").textContent="";$("au").classList.add("on")}
+function setMode(m){mode=m;$("phw").classList.toggle("hide",m==="in");$("atit").textContent=m==="in"?"ورود":"ساخت حساب";$("abtn").textContent=m==="in"?"ورود":"ساخت حساب";$("sw").textContent=m==="in"?"حساب نداری؟ ساخت حساب":"حساب داری؟ ورود"}
+async function doAuth(){
+ function am(t){$("am").textContent=t}
+ if(demo)return am("حالت نمایشی: ثبت‌نام و ورود فعال نیست.");
+ var u=$("au_u").value.trim().toLowerCase(),pw=$("au_p").value,r;
+ if(mode==="in"){r=await sb.auth.signInWithPassword({email:u.indexOf("@")>0?u:u+"@gamenet.app",password:pw});if(r.error)return am("نام کاربری یا رمز اشتباهه.")}
+ else{var ph=$("au_ph").value.trim();
+  if(!/^[a-z0-9_]{3,20}$/.test(u))return am("نام کاربری: فقط حروف انگلیسی کوچک، عدد و _ (۳ تا ۲۰ حرف).");
+  if(!/^09\d{9}$/.test(ph))return am("شمارهٔ موبایل معتبر نیست.");if(pw.length<6)return am("رمز حداقل ۶ حرف باشه.");
+  r=await sb.auth.signUp({email:u+"@gamenet.app",password:pw});if(r.error)return am(/registered/i.test(r.error.message)?"این نام کاربری گرفته شده.":"ثبت‌نام نشد.");
+  if(!r.data.session)return am("ثبت‌نام شد ولی ورود نشد. صاحب سایت باید «Confirm email» رو خاموش کنه.");
+  var pr=await sb.from("profiles").insert({id:r.data.user.id,username:u,phone:ph});if(pr.error){await sb.auth.signOut();return am("این نام کاربری گرفته شده.")}}
+ $("au").classList.remove("on");await loadMe();refresh()}
+
+async function drawAdm(){
+ var el=$("t-adm");if(!demo&&!isA){el.innerHTML='<div class="card">این بخش فقط برای صاحب گیم‌نته.</div>';return}
+ var rows,pr;if(demo){var t0=new Date(Date.now()-47*60000).toISOString();rows=[{id:1,status:"requested",devices:{name:"پلی ۴ - VIP ۲",kind:"PS4",zone:"vip"},profiles:{username:"reza_pro",phone:"09123456789",stamps:3}},{id:2,status:"active",started_at:t0,devices:{name:"پلی ۴ - ۵",kind:"PS4",zone:"hall"},profiles:{username:"sina",phone:"09121112233",stamps:7}}];pr=[{id:"x",username:"amir_fifa",stamps:12}]}else{var s=await sb.from("sessions").select("*,devices(name,kind,zone),profiles(username,phone,stamps)").in("status",["requested","active"]).order("requested_at");rows=s.data||[];var pp=await sb.from("profiles").select("*").gte("stamps",S.home_stamps);pr=pp.data||[]}
+ var h=(demo?'<div class="demo" style="margin:0 0 8px">نمای نمونه از پنل مدیر. دکمه‌ها در حالت نمایشی کار نمی‌کنن.</div>':'')+'<h2>درخواست‌های جدید</h2>',q=rows.filter(function(x){return x.status==="requested"}),a=rows.filter(function(x){return x.status==="active"});
+ h+=q.length?q.map(function(x){return '<div class="card"><b>'+esc(x.profiles.username)+'</b> · '+esc(x.profiles.phone)+'<br>می‌خواد: '+esc(x.devices.name)+'<br><button class="btn sm" onclick="aDo(\'admin_start\','+x.id+')">تحویل دستگاه</button><button class="btn sm rd" onclick="aDo(\'admin_reject\','+x.id+')">رد</button></div>'}).join(""):'<p class="mu">درخواستی نیست.</p>';
+ h+='<h2>در حال بازی</h2>';
+ h+=a.length?a.map(function(x){return '<div class="card"><b>'+esc(x.devices.name)+'</b> · '+esc(x.profiles.username)+'<div class="big tmA" data-s="'+x.started_at+'" data-r="'+rate(x.devices)+'">00:00:00</div><div class="mu" style="text-align:center"></div><button class="btn sm rd" onclick="aEnd('+x.id+','+x.profiles.stamps+')">پایان بازی و حساب</button></div>'}).join(""):'<p class="mu">کسی بازی نمی‌کنه.</p>';
+ var L={rate_hall4:"قیمت ساعتی PS4 سالن",rate_hall5:"قیمت ساعتی PS5 سالن",rate_vip4:"قیمت ساعتی PS4 VIP",rate_vip5:"قیمت ساعتی PS5 VIP",stamps_needed:"تعداد مهر برای ساعت رایگان",free_value:"سقف مبلغ ساعت رایگان",home_stamps:"تعداد مهر برای کنسول خانه"};
+ h+='<h2>قیمت‌ها و تنظیمات</h2><div class="card">'+Object.keys(L).map(function(k){return '<label>'+L[k]+'</label><input id="s_'+k+'" inputmode="numeric" value="'+S[k]+'">'}).join("")+'<button class="btn" style="margin-top:10px" onclick="saveSet()">ذخیره</button></div>';
+ h+='<h2>بازی‌ها</h2><div class="card">'+GM.map(function(g){return '<div class="row"><span class="gr1">'+esc(g.name)+'</span><button class="btn sm rd" onclick="delGame('+g.id+')">حذف</button></div>'}).join("")+'<label>بازی جدید</label><input id="ng"><button class="btn" style="margin-top:8px" onclick="addGame()">افزودن بازی</button></div>';
+ h+='<h2>ثبت امتیاز بازیکن</h2><div class="card"><label>بازی</label><select id="sg">'+GM.map(function(g){return '<option value="'+g.id+'">'+esc(g.name)+'</option>'}).join("")+'</select><label>نام کاربری بازیکن</label><input id="su" dir="ltr"><label>امتیاز</label><input id="sp" inputmode="numeric" value="1"><button class="btn" style="margin-top:8px" onclick="addScore()">ثبت امتیاز</button></div>';
+ h+='<h2>دستگاه‌ها</h2><div class="card">'+D.map(function(d){return '<div class="row" style="margin:4px 0"><span class="gr1">'+esc(d.name)+' · '+d.kind+' · '+(d.zone==="vip"?"VIP":"سالن")+'</span>'+(d.status==="free"?'<button class="btn sm rd" onclick="delDev('+d.id+')">حذف</button>':'')+'</div>'}).join("")+'<label>نام دستگاه جدید</label><input id="dn"><label>نوع</label><select id="dk"><option>PS4</option><option>PS5</option></select><label>محل</label><select id="dz"><option value="hall">سالن</option><option value="vip">اتاق VIP</option></select><button class="btn" style="margin-top:8px" onclick="addDev()">افزودن دستگاه</button></div>';
+ h+='<h2>جایزهٔ کنسول خانه</h2>'+(pr.length?pr.map(function(p){return '<div class="card row"><span class="gr1">'+esc(p.username)+' ('+fa(p.stamps)+' مهر)</span><button class="btn sm" onclick="giveHome(\''+p.id+'\')">تحویل شد</button></div>'}).join(""):'<p class="mu">فعلاً کسی به این مرحله نرسیده.</p>');
+ el.innerHTML=h;tick()}
+async function aDo(fn,id){if(demo)return toast("حالت نمایشی");var r=await sb.rpc(fn,{s:id});if(r.error)return toast("خطا");refresh()}
+async function aEnd(id,st){if(demo)return toast("حالت نمایشی");var f=false;if(st>=S.stamps_needed)f=confirm("این بازیکن "+fa(st)+" مهر داره. ساعت رایگان (تا "+fa(S.free_value)+" تومان) حساب بشه؟");
+ var r=await sb.rpc("admin_end",{s:id,use_free:f});if(r.error)return toast("خطا");var x=r.data;alert("مدت: "+x.minutes+" دقیقه\nمبلغ: "+fa(x.cost)+" تومان\nتخفیف: "+fa(x.discount)+" تومان\nقابل پرداخت: "+fa(x.pay)+" تومان");refresh()}
+async function saveSet(){if(demo)return toast("حالت نمایشی");var o={};["rate_hall4","rate_hall5","rate_vip4","rate_vip5","stamps_needed","free_value","home_stamps"].forEach(function(k){o[k]=parseInt($("s_"+k).value)||0});var r=await sb.from("settings").update(o).eq("id",1);toast(r.error?"ذخیره نشد":"✅ ذخیره شد");refresh()}
+async function addGame(){if(demo)return toast("حالت نمایشی");var n=$("ng").value.trim();if(!n)return;await sb.from("games").insert({name:n});refresh()}
+async function delGame(id){if(demo)return toast("حالت نمایشی");if(!confirm("این بازی حذف بشه؟ امتیازهاش هم پاک میشه."))return;await sb.from("games").delete().eq("id",id);refresh()}
+async function addScore(){if(demo)return toast("حالت نمایشی");var r=await sb.rpc("admin_add_score",{g:+$("sg").value,uname:$("su").value.trim().toLowerCase(),pts:parseInt($("sp").value)||1});toast(r.error?"بازیکن پیدا نشد":"✅ ثبت شد")}
+async function giveHome(id){if(demo)return toast("حالت نمایشی");if(!confirm("جایزه تحویل داده شد و مهرها کم بشه؟"))return;await sb.rpc("admin_give_home",{u:id});refresh()}
+async function addDev(){if(demo)return toast("حالت نمایشی");var n=$("dn").value.trim();if(!n)return toast("نام دستگاه رو بنویس");var m=D.reduce(function(a,d){return Math.max(a,d.sort||0)},0);var r=await sb.from("devices").insert({name:n,kind:$("dk").value,zone:$("dz").value,sort:m+1});toast(r.error?"ثبت نشد":"✅ اضافه شد");refresh()}
+async function delDev(id){if(demo)return toast("حالت نمایشی");if(!confirm("این دستگاه حذف بشه؟"))return;var r=await sb.from("devices").delete().eq("id",id);toast(r.error?"حذف نشد":"✅ حذف شد");refresh()}
+init();
+</script>
+</body>
+  </html>
