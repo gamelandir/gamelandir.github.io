@@ -69,7 +69,7 @@ input,select{width:100%;padding:10px;border:1px solid var(--br);border-radius:10
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.58.0/dist/umd/supabase.min.js"></script>
 <script>
 var CFG={URL:"https://gktbdqwgodbzbzbmqiuj.supabase.co",KEY:"sb_publishable_-ScV7xJmYFU-yrd9KROpMw_EY9k4wSX",NAME:"گیم لند"};
-var sb=null,demo=true,me=null,isA=false,S={rate_hall4:80000,rate_hall5:110000,rate_vip4:90000,rate_vip5:120000,stamps_needed:6,free_value:80000,home_stamps:12},D=[],MS=null,GM=[],cur="dev",lg={g:0,p:"day"},mode="in";
+var sb=null,demo=true,me=null,isA=false,S={rate_hall4:80000,rate_hall5:110000,rate_vip4:90000,rate_vip5:120000,stamps_needed:6,free_value:80000,home_stamps:12},D=[],MS=null,GM=[],cur="dev",lg={g:0,p:"day"},mode="in",adm=false;
 function $(i){return document.getElementById(i)}
 function esc(s){var d=document.createElement("div");d.textContent=s==null?"":s;return d.innerHTML}
 function fa(n){return Number(n).toLocaleString("fa-IR")}
@@ -90,7 +90,9 @@ async function init(){
  if(demo){D=demoDevices();GM=[{id:1,name:"فیفا"},{id:2,name:"پس"},{id:3,name:"کالاف"}];lg.g=1;$("tadm").classList.remove("hide")}
  else{var s=await sb.auth.getSession();if(s.data.session)await loadMe()}
  $("demo").classList.toggle("hide",!demo);
- await refresh();setInterval(function(){if(!document.hidden&&!demo)refresh()},10000);setInterval(tick,1000)}
+ await refresh();setInterval(function(){if(!document.hidden&&!demo)refresh()},10000);setInterval(tick,1000);
+ chkHash();window.addEventListener("hashchange",chkHash)}
+function chkHash(){if(location.hash==="#admin"&&!demo){if(isA)go("adm");else if(!$("au").classList.contains("on"))openAuth(true)}}
 async function loadMe(){
  var u=(await sb.auth.getUser()).data.user;if(!u){me=null;isA=false;return}
  var r=await sb.from("profiles").select("*").eq("id",u.id).maybeSingle();var a=await sb.rpc("is_admin");isA=!!a.data;
@@ -101,7 +103,7 @@ async function refresh(){
  if(!lg.g&&GM.length)lg.g=GM[0].id;
  $("ac").textContent=me?"👤 "+me.username:"👤";draw()}
 function draw(){if(cur==="dev")drawDev();else if(cur==="lead")drawLead();else if(cur==="card")drawCard();else drawAdm()}
-function accBtn(){if(me)go("card");else openAuth()}
+function accBtn(){if(me)go(isA?"adm":"card");else openAuth()}
 
 function drawDev(){
  var h="";
@@ -149,20 +151,24 @@ async function upAv(inp){var f=inp.files[0];if(!f)return;var p=me.id+"/avatar-"+
  await sb.from("profiles").update({avatar_url:sb.storage.from("avatars").getPublicUrl(p).data.publicUrl}).eq("id",me.id);refresh()}
 async function logout(){if(sb)await sb.auth.signOut();me=null;isA=false;MS=null;$("tadm").classList.add("hide");go("dev");refresh()}
 
-function openAuth(){$("am").textContent="";$("au").classList.add("on")}
-function setMode(m){mode=m;$("phw").classList.toggle("hide",m==="in");$("atit").textContent=m==="in"?"ورود":"ساخت حساب";$("abtn").textContent=m==="in"?"ورود":"ساخت حساب";$("sw").textContent=m==="in"?"حساب نداری؟ ساخت حساب":"حساب داری؟ ورود"}
+function openAuth(a){adm=!!a;$("am").textContent="";$("au_u").value="";$("au_p").value="";setMode("in");$("au").classList.add("on")}
+function setMode(m){mode=m;$("phw").classList.toggle("hide",m==="in");$("atit").textContent=adm?"ورود مدیر":(m==="in"?"ورود":"ساخت حساب");$("ul").textContent=adm?"ایمیل مدیر":"نام کاربری";$("sw").classList.toggle("hide",adm);$("abtn").textContent=m==="in"?"ورود":"ساخت حساب";$("sw").textContent=m==="in"?"حساب نداری؟ ساخت حساب":"حساب داری؟ ورود"}
 async function doAuth(){
  function am(t){$("am").textContent=t}
  if(demo)return am("حالت نمایشی: ثبت‌نام و ورود فعال نیست.");
  var u=$("au_u").value.trim().toLowerCase(),pw=$("au_p").value,r;
- if(mode==="in"){r=await sb.auth.signInWithPassword({email:u.indexOf("@")>0?u:u+"@gamenet.app",password:pw});if(r.error)return am("نام کاربری یا رمز اشتباهه.")}
+ if(mode==="in"){
+  if(adm&&u.indexOf("@")<1)return am("ایمیل مدیر رو کامل بنویس.");
+  r=await sb.auth.signInWithPassword({email:u.indexOf("@")>0?u:u+"@gamenet.app",password:pw});if(r.error)return am(adm?"ایمیل یا رمز اشتباهه.":"نام کاربری یا رمز اشتباهه.")}
  else{var ph=$("au_ph").value.trim();
   if(!/^[a-z0-9_]{3,20}$/.test(u))return am("نام کاربری: فقط حروف انگلیسی کوچک، عدد و _ (۳ تا ۲۰ حرف).");
   if(!/^09\d{9}$/.test(ph))return am("شمارهٔ موبایل معتبر نیست.");if(pw.length<6)return am("رمز حداقل ۶ حرف باشه.");
   r=await sb.auth.signUp({email:u+"@gamenet.app",password:pw});if(r.error)return am(/registered/i.test(r.error.message)?"این نام کاربری گرفته شده.":"ثبت‌نام نشد.");
   if(!r.data.session)return am("ثبت‌نام شد ولی ورود نشد. صاحب سایت باید «Confirm email» رو خاموش کنه.");
   var pr=await sb.from("profiles").insert({id:r.data.user.id,username:u,phone:ph});if(pr.error){await sb.auth.signOut();return am("این نام کاربری گرفته شده.")}}
- $("au").classList.remove("on");await loadMe();refresh()}
+ await loadMe();
+ if(adm&&!isA){await sb.auth.signOut();me=null;isA=false;$("tadm").classList.add("hide");return am("این حساب، حساب مدیر نیست.")}
+ $("au").classList.remove("on");await refresh();if(adm&&isA)go("adm")}
 
 async function drawAdm(){
  var el=$("t-adm");if(!demo&&!isA){el.innerHTML='<div class="card">این بخش فقط برای صاحب گیم‌نته.</div>';return}
@@ -177,6 +183,7 @@ async function drawAdm(){
  h+='<h2>ثبت امتیاز بازیکن</h2><div class="card"><label>بازی</label><select id="sg">'+GM.map(function(g){return '<option value="'+g.id+'">'+esc(g.name)+'</option>'}).join("")+'</select><label>نام کاربری بازیکن</label><input id="su" dir="ltr"><label>امتیاز</label><input id="sp" inputmode="numeric" value="1"><button class="btn" style="margin-top:8px" onclick="addScore()">ثبت امتیاز</button></div>';
  h+='<h2>دستگاه‌ها</h2><div class="card">'+D.map(function(d){return '<div class="row" style="margin:4px 0"><span class="gr1">'+esc(d.name)+' · '+d.kind+' · '+(d.zone==="vip"?"VIP":"سالن")+'</span>'+(d.status==="free"?'<button class="btn sm rd" onclick="delDev('+d.id+')">حذف</button>':'')+'</div>'}).join("")+'<label>نام دستگاه جدید</label><input id="dn"><label>نوع</label><select id="dk"><option>PS4</option><option>PS5</option></select><label>محل</label><select id="dz"><option value="hall">سالن</option><option value="vip">اتاق VIP</option></select><button class="btn" style="margin-top:8px" onclick="addDev()">افزودن دستگاه</button></div>';
  h+='<h2>جایزهٔ کنسول خانه</h2>'+(pr.length?pr.map(function(p){return '<div class="card row"><span class="gr1">'+esc(p.username)+' ('+fa(p.stamps)+' مهر)</span><button class="btn sm" onclick="giveHome(\''+p.id+'\')">تحویل شد</button></div>'}).join(""):'<p class="mu">فعلاً کسی به این مرحله نرسیده.</p>');
+ h+='<button class="btn gr" style="margin-top:16px" onclick="logout()">خروج از حساب مدیر</button>';
  el.innerHTML=h;tick()}
 async function aDo(fn,id){if(demo)return toast("حالت نمایشی");var r=await sb.rpc(fn,{s:id});if(r.error)return toast("خطا");refresh()}
 async function aEnd(id,st){if(demo)return toast("حالت نمایشی");var f=false;if(st>=S.stamps_needed)f=confirm("این بازیکن "+fa(st)+" مهر داره. ساعت رایگان (تا "+fa(S.free_value)+" تومان) حساب بشه؟");
@@ -191,4 +198,4 @@ async function delDev(id){if(demo)return toast("حالت نمایشی");if(!conf
 init();
 </script>
 </body>
-  </html>
+ </html>
